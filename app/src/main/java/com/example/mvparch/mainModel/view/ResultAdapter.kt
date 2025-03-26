@@ -1,4 +1,4 @@
-package com.example.mvparch.mainModel
+package com.example.mvparch.mainModel.view
 
 import android.annotation.SuppressLint
 import android.content.Context
