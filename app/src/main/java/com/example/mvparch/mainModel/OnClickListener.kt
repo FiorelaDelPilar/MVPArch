@@ -1,4 +1,4 @@
-package com.example.mvparch
+package com.example.mvparch.mainModel
 
 import com.example.mvparch.SportEvent
 
