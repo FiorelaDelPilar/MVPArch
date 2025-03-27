@@ -1,10 +1,10 @@
 package com.example.mvparch.mainModel.model
 
-import com.example.mvparch.EventBus
-import com.example.mvparch.SportEvent
-import com.example.mvparch.getAdEventsInRealtime
-import com.example.mvparch.getResultEventsInRealtime
-import com.example.mvparch.someTime
+import com.example.mvparch.common.EventBus
+import com.example.mvparch.common.SportEvent
+import com.example.mvparch.common.getAdEventsInRealtime
+import com.example.mvparch.common.getResultEventsInRealtime
+import com.example.mvparch.common.someTime
 import kotlinx.coroutines.delay
 
 class MainRepository {

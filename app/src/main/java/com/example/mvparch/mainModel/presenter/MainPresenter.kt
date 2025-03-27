@@ -1,8 +1,8 @@
 package com.example.mvparch.mainModel.presenter
 
 import android.util.Log
-import com.example.mvparch.EventBus
-import com.example.mvparch.SportEvent
+import com.example.mvparch.common.EventBus
+import com.example.mvparch.common.SportEvent
 import com.example.mvparch.mainModel.model.MainRepository
 import com.example.mvparch.mainModel.view.MainActivity
 import kotlinx.coroutines.CoroutineScope

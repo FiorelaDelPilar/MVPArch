@@ -9,16 +9,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mvparch.EventBus
-import com.example.mvparch.SportEvent
+import com.example.mvparch.common.SportEvent
 import com.example.mvparch.databinding.ActivityMainBinding
-import com.example.mvparch.getAdEventsInRealtime
-import com.example.mvparch.getResultEventsInRealtime
 import com.example.mvparch.mainModel.presenter.MainPresenter
-import com.example.mvparch.someTime
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 

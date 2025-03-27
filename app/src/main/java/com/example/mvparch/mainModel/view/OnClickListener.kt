@@ -1,6 +1,6 @@
 package com.example.mvparch.mainModel.view
 
-import com.example.mvparch.SportEvent
+import com.example.mvparch.common.SportEvent
 
 
 /****

@@ -1,4 +1,4 @@
-package com.example.mvparch
+package com.example.mvparch.common
 
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableSharedFlow

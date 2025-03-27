@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mvparch.R
-import com.example.mvparch.SportEvent
+import com.example.mvparch.common.SportEvent
 import com.example.mvparch.databinding.ItemEventBinding
 
 /****

@@ -1,4 +1,6 @@
-package com.example.mvparch
+package com.example.mvparch.common
+
+import com.example.mvparch.R
 
 sealed class SportEvent {
     //las clases selladas se usan para representar una jerarquía de clases restringidas
