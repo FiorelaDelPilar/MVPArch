@@ -26,7 +26,7 @@ class MainPresenter(private val view: MainActivity) {
         view.showAdUI(true)
     }
 
-    private suspend fun getEvents() {
+    suspend fun getEvents() {
         view.showProgress(true)
         repository.getEvents()
     }
@@ -40,7 +40,7 @@ class MainPresenter(private val view: MainActivity) {
     }
 
     suspend fun saveResult(result: SportEvent.ResultSuccess) {
-        view.showProgress(true)
+        //view.showProgress(true) => Curiosamente esto genera un punto blanco veloz al dar click a los items si es que se descomenta
         repository.saveResult(result)
     }
 
@@ -51,32 +51,32 @@ class MainPresenter(private val view: MainActivity) {
     private fun onEvent() {
         viewScope.launch {
             EventBus.instance().subscribe<SportEvent> { event ->
-                when (event) {
-                    is SportEvent.ResultSuccess -> {
-                        view.add(event)
-                        view.showProgress(false)
-                    }
+                this.launch {
+                    when (event) {
+                        is SportEvent.ResultSuccess -> {
+                            view.add(event)
+                            view.showProgress(false)
+                        }
 
-                    is SportEvent.ResultError -> {
-                        view.showSnackbar("Code ${event.code}, Message: ${event.msg} ")
-                        view.showProgress(false)
-                    }
+                        is SportEvent.ResultError -> {
+                            view.showSnackbar("Code ${event.code}, Message: ${event.msg} ")
+                            view.showProgress(false)
+                        }
 
-                    is SportEvent.AdEvent -> {
-                        view.showToast("Ad click. Send data to server---")
-                    }
+                        is SportEvent.AdEvent -> {
+                            view.showToast("Ad click. Send data to server---")
+                        }
 
-                    is SportEvent.ClosedAdEvent -> {
-                        view.showAdUI(false)
-                        Log.i("DEV:::", "Ad was closed. Send data to server")
-                    }
+                        is SportEvent.ClosedAdEvent -> {
+                            view.showAdUI(false)
+                            Log.i("DEV:::", "Ad was closed. Send data to server")
+                        }
 
-                    is SportEvent.SaveEvent -> {
-                        view.showToast("Guardado exitosamente")
-                        view.showProgress(false)
+                        is SportEvent.SaveEvent -> {
+                            view.showToast("Guardado exitosamente")
+                            view.showProgress(false)
+                        }
                     }
-
-                    else -> {}
                 }
             }
         }

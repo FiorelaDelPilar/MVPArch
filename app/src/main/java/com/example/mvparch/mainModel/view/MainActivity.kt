@@ -14,14 +14,19 @@ import com.example.mvparch.SportEvent
 import com.example.mvparch.databinding.ActivityMainBinding
 import com.example.mvparch.getAdEventsInRealtime
 import com.example.mvparch.getResultEventsInRealtime
+import com.example.mvparch.mainModel.presenter.MainPresenter
 import com.example.mvparch.someTime
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity(), OnClickListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: ResultAdapter
+    private lateinit var presenter: MainPresenter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +40,8 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             insets
         }
 
+        presenter = MainPresenter(this)
+        presenter.onCreate()
         setupAdapter()
         setupRecyclerView()
         setupSwipeRefresh()
@@ -57,8 +64,9 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     private fun setupSwipeRefresh() {
         binding.srlResults.setOnRefreshListener {
             //adapter.clear()
-            getEvents()
+            //getEvents()
             //binding.btnAd.visibility = View.VISIBLE
+            lifecycleScope.launch { presenter.refresh() }
         }
     }
 
@@ -67,14 +75,16 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             setOnClickListener {
                 lifecycleScope.launch {
                     //binding.srlResults.isRefreshing = true
-                    val events = getAdEventsInRealtime()
-                    EventBus.instance().publish(events.first())
+                    //  val events = getAdEventsInRealtime()
+                    //EventBus.instance().publish(events.first())
+                    lifecycleScope.launch { presenter.registerAd() }
                 }
             }
             setOnLongClickListener { view ->
                 lifecycleScope.launch {
                     //binding.srlResults.isRefreshing = true
-                    EventBus.instance().publish(SportEvent.ClosedAdEvent)
+                    //EventBus.instance().publish(SportEvent.ClosedAdEvent)
+                    lifecycleScope.launch { presenter.closeAd() }
 
                 }
                 true
@@ -83,20 +93,27 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         }
     }
 
-    private fun getEvents() {
-        lifecycleScope.launch {
-            val events = getResultEventsInRealtime()
-            events.forEach { event ->
-                delay(someTime())
-                EventBus.instance().publish(event)
-            }
-        }
-    }
+//    private fun getEvents() {
+//        lifecycleScope.launch {
+//            val events = getResultEventsInRealtime()
+//            events.forEach { event ->
+//                delay(someTime())
+//                EventBus.instance().publish(event)
+//            }
+//            lifecycleScope.launch { presenter.getEvents() }
+//        }
+//    }
 
     override fun onStart() {
         super.onStart()
         //binding.srlResults.isRefreshing = true
-        getEvents()
+        //getEvents()
+        lifecycleScope.launch { presenter.getEvents() }
+    }
+
+    override fun onDestroy() {
+        presenter.onDestroy()
+        super.onDestroy()
     }
 
     //OnClickListener interface
@@ -105,6 +122,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         lifecycleScope.launch {
             //EventBus.instance().publish(SportEvent.SaveEvent)
             //SportService.instance().saveResult(result)
+            presenter.saveResult(result)
         }
     }
 
@@ -117,7 +135,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         adapter.clear()
     }
 
-    fun showAdUI(isVisible: Boolean) {
+    suspend fun showAdUI(isVisible: Boolean) = withContext(Dispatchers.Main){
         binding.btnAd.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
@@ -125,7 +143,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding.srlResults.isRefreshing = isVisible
     }
 
-    fun showToast(msg: String) {
+    suspend fun showToast(msg: String) = withContext(Dispatchers.Main){
         Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
     }
 
