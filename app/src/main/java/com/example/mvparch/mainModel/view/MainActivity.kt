@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     private lateinit var adapter: ResultAdapter
     private lateinit var presenter: MainPresenter
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,7 +40,6 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         setupRecyclerView()
         setupSwipeRefresh()
         setupClicks()
-
     }
 
     private fun setupAdapter() {
@@ -58,9 +56,6 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     private fun setupSwipeRefresh() {
         binding.srlResults.setOnRefreshListener {
-            //adapter.clear()
-            //getEvents()
-            //binding.btnAd.visibility = View.VISIBLE
             lifecycleScope.launch { presenter.refresh() }
         }
     }
@@ -69,18 +64,12 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding.btnAd.run {
             setOnClickListener {
                 lifecycleScope.launch {
-                    //binding.srlResults.isRefreshing = true
-                    //  val events = getAdEventsInRealtime()
-                    //EventBus.instance().publish(events.first())
                     lifecycleScope.launch { presenter.registerAd() }
                 }
             }
             setOnLongClickListener { view ->
                 lifecycleScope.launch {
-                    //binding.srlResults.isRefreshing = true
-                    //EventBus.instance().publish(SportEvent.ClosedAdEvent)
                     lifecycleScope.launch { presenter.closeAd() }
-
                 }
                 true
             }
@@ -88,21 +77,8 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         }
     }
 
-//    private fun getEvents() {
-//        lifecycleScope.launch {
-//            val events = getResultEventsInRealtime()
-//            events.forEach { event ->
-//                delay(someTime())
-//                EventBus.instance().publish(event)
-//            }
-//            lifecycleScope.launch { presenter.getEvents() }
-//        }
-//    }
-
     override fun onStart() {
         super.onStart()
-        //binding.srlResults.isRefreshing = true
-        //getEvents()
         lifecycleScope.launch { presenter.getEvents() }
     }
 
@@ -111,12 +87,8 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         super.onDestroy()
     }
 
-    //OnClickListener interface
     override fun onClick(result: SportEvent.ResultSuccess) {
-        //binding.srlResults.isRefreshing = true
         lifecycleScope.launch {
-            //EventBus.instance().publish(SportEvent.SaveEvent)
-            //SportService.instance().saveResult(result)
             presenter.saveResult(result)
         }
     }
@@ -130,7 +102,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         adapter.clear()
     }
 
-    suspend fun showAdUI(isVisible: Boolean) = withContext(Dispatchers.Main){
+    suspend fun showAdUI(isVisible: Boolean) = withContext(Dispatchers.Main) {
         binding.btnAd.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
@@ -138,7 +110,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding.srlResults.isRefreshing = isVisible
     }
 
-    suspend fun showToast(msg: String) = withContext(Dispatchers.Main){
+    suspend fun showToast(msg: String) = withContext(Dispatchers.Main) {
         Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
     }
 
